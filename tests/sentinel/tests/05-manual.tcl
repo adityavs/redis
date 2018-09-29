@@ -6,12 +6,13 @@ test "Manual failover works" {
     set old_port [RI $master_id tcp_port]
     set addr [S 0 SENTINEL GET-MASTER-ADDR-BY-NAME mymaster]
     assert {[lindex $addr 1] == $old_port}
-    S 0 SENTINEL FAILOVER mymaster
+    catch {S 0 SENTINEL FAILOVER mymaster} reply
+    assert {$reply eq "OK"}
     foreach_sentinel_id id {
         wait_for_condition 1000 50 {
             [lindex [S $id SENTINEL GET-MASTER-ADDR-BY-NAME mymaster] 1] != $old_port
         } else {
-            fail "At least one Sentinel did not received failover info"
+            fail "At least one Sentinel did not receive failover info"
         }
     }
     set addr [S 0 SENTINEL GET-MASTER-ADDR-BY-NAME mymaster]
