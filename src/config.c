@@ -120,7 +120,7 @@ const char *configEnumGetName(configEnum *ce, int val) {
     return NULL;
 }
 
-/* Wrapper for configEnumGetName() returning "unknown" insetad of NULL if
+/* Wrapper for configEnumGetName() returning "unknown" instead of NULL if
  * there is no match. */
 const char *configEnumGetNameOrUnknown(configEnum *ce, int val) {
     const char *name = configEnumGetName(ce,val);
@@ -684,7 +684,7 @@ void loadServerConfigFromString(char *config) {
                 goto loaderr;
             }
         } else if ((!strcasecmp(argv[0],"cluster-slave-no-failover") ||
-                    !strcasecmp(argv[0],"cluster-replica-no-failiver")) &&
+                    !strcasecmp(argv[0],"cluster-replica-no-failover")) &&
                    argc == 2)
         {
             server.cluster_slave_no_failover = yesnotoi(argv[1]);
@@ -1248,7 +1248,7 @@ void configSetCommand(client *c) {
             if (server.maxmemory < zmalloc_used_memory()) {
                 serverLog(LL_WARNING,"WARNING: the new maxmemory value set via CONFIG SET is smaller than the current memory usage. This will result in key eviction and/or the inability to accept new write commands depending on the maxmemory-policy.");
             }
-            freeMemoryIfNeeded();
+            freeMemoryIfNeededAndSafe();
         }
     } config_set_memory_field(
       "proto-max-bulk-len",server.proto_max_bulk_len) {
